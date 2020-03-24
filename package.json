@@ -1,6 +1,6 @@
 {
   "name": "react-page-animation",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Customisable Page Animations with react-router",
   "main": "./lib/PageAnimation.js",
   "types": "./lib/PageAnimation.d.ts",
