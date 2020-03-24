@@ -72,7 +72,7 @@ function PageAnimation({
   useEffect(() => {
     const unlisten = history.listen(location => {
       setPages(pages => {
-        if (location.pathname === pages[pages.length - 1].pathname) return pages;
+        if (location.pathname === pages[pages.length - 1].pathname || !animate) return pages;
 
         const dir = getDir(location.pathname, pages[pages.length - 1].pathname, grid, bias);
 
@@ -128,10 +128,10 @@ function PageAnimation({
     ]);
 
     return unlisten;
-  }, []);
+  }, [animate]);
 
   if (!animate) {
-    return children(history.location);
+    return children;
   }
 
   return (
