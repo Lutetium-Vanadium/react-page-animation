@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "jsx": "react",
+    "baseUrl": ".",
+    "moduleResolution": "node",
+    "rootDir": "src",
+    "esModuleInterop": true,
+    "paths": {
+      "~*": ["./src/*"],
+      "styles": ["./src/styles"]
+    }
+  },
+  "include": ["./src/**/*.ts", "./src/**/*.tsx", "global.d.ts", "./declarations.d.ts"],
+  "exclude": ["node_modules"]
+}

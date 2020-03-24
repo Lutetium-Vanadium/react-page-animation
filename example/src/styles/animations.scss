@@ -1,0 +1,121 @@
+@import "./vars";
+
+$dur: 500ms;
+$curve: cubic-bezier(0.215, 0.61, 0.355, 1);
+
+.direction {
+  &-left {
+    &-enter {
+      animation: enter-left $dur $curve;
+    }
+
+    &-leave {
+      animation: leave-left $dur $curve;
+    }
+  }
+
+  &-right {
+    &-enter {
+      animation: enter-right $dur $curve;
+    }
+
+    &-leave {
+      animation: leave-right $dur $curve;
+    }
+  }
+
+  &-top {
+    &-enter {
+      animation: enter-top $dur $curve;
+    }
+
+    &-leave {
+      animation: leave-top $dur $curve;
+    }
+  }
+
+  &-bottom {
+    &-enter {
+      animation: enter-bottom $dur $curve;
+    }
+
+    &-leave {
+      animation: leave-bottom $dur $curve;
+    }
+  }
+}
+
+@keyframes enter-left {
+  from {
+    transform: translateX(-100vw);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes leave-left {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(100vw);
+  }
+}
+
+@keyframes enter-right {
+  from {
+    transform: translateX(100vw);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes leave-right {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-100vw);
+  }
+}
+
+@keyframes enter-top {
+  from {
+    transform: translateY(-100vh);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes leave-top {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(100vh);
+  }
+}
+@keyframes enter-bottom {
+  from {
+    transform: translateY(100vh);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes leave-bottom {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-100vh);
+  }
+}

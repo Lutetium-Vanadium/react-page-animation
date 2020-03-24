@@ -1,0 +1,29 @@
+{
+  "name": "react-page-animation",
+  "version": "1.0.0",
+  "description": "Customisable Page Animations with react-router",
+  "main": "./lib/PageAnimation.js",
+  "types": "./lib/PageAnimation.d.ts",
+  "author": "Lutetium-Vanadium",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "prepublish": "yarn build",
+    "build": "tsc --project ./tsconfig.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lutetium-Vanadium/react-page-animation"
+  },
+  "dependencies": {
+    "@types/react": "^16.9.25",
+    "@types/react-dom": "^16.9.5",
+    "@types/react-router-dom": "^5.1.3",
+    "typescript": "^3.8.3"
+  },
+  "devDependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.1.2"
+  }
+}

@@ -1,0 +1,50 @@
+@import "./vars";
+
+.desc {
+  color: #ccc;
+  font-size: 1.3em;
+}
+
+.label {
+  font-size: 1.5em;
+}
+
+.header {
+  font-size: 4em;
+  margin: 5% 10%;
+}
+
+.container {
+  @include flex-box;
+
+  flex: 1;
+}
+
+.page {
+  padding: 1rem 5rem;
+}
+
+.home {
+  @include flex-box;
+  height: 80vh;
+
+  img {
+    max-width: 30vw;
+  }
+}
+.product {
+  @include flex-box($direction: column);
+
+  .prod {
+    @include flex-box;
+    margin: 2rem 0;
+
+    &.-reverse {
+      flex-direction: row-reverse;
+    }
+
+    img {
+      max-width: 30vw;
+    }
+  }
+}

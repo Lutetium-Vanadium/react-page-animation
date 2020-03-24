@@ -1,0 +1,150 @@
+@import "./vars";
+@import "./pages";
+@import "./animations";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: white;
+  font-family: sans-serif;
+}
+
+html,
+body,
+#root {
+  min-width: 99vw;
+  height: 100vh;
+  background-color: $bg;
+}
+
+main {
+  height: calc(100vh - 5rem);
+  padding-top: 1rem;
+  position: relative;
+  top: 5rem;
+  overflow-y: auto;
+  scrollbar-color: lighten($color: $bg, $amount: 10%) $bg;
+
+  ::-webkit-scrollbar {
+    width: 0.7rem;
+    position: fixed;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: $bg;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: lighten($color: $bg, $amount: 10%);
+  }
+}
+
+.nav-bar {
+  @include flex-box($justify: space-around);
+
+  top: 0;
+  position: fixed;
+  height: 5rem;
+  width: 100%;
+  padding: 1rem 3rem;
+  background-color: $bg;
+
+  .logo {
+    font-size: 2em;
+    font-weight: bold;
+    text-transform: uppercase;
+    flex: 3;
+    color: lighten($color: $highlight, $amount: 13%);
+    cursor: pointer;
+  }
+
+  .links {
+    @include flex-box($justify: space-between);
+
+    flex: 1;
+
+    .link {
+      padding: 0.7rem 1.5rem;
+      border-radius: 0.3rem;
+      margin: 1rem;
+      transition: 0.2s;
+      border: 2px solid darken($highlight, 10%);
+      color: gainsboro;
+
+      &.-active {
+        background-color: darken($highlight, 10%);
+        color: white;
+
+        &:hover {
+          background-color: $highlight;
+        }
+      }
+
+      &:hover {
+        border-color: $highlight;
+        color: white;
+      }
+    }
+  }
+}
+
+img {
+  max-height: 90%;
+  max-width: 90%;
+}
+
+a {
+  text-decoration: none;
+  outline: none;
+  border: none;
+}
+
+p {
+  text-decoration: none;
+  outline: none;
+  border: none;
+}
+
+hr {
+  height: 2px;
+  width: 80%;
+  background-color: #dfdfdf69;
+  border: none;
+  margin: 3rem auto 4rem auto;
+}
+
+button {
+  background: none;
+  border: none;
+  width: auto;
+  overflow: visible;
+
+  color: inherit;
+  font: inherit;
+
+  line-height: normal;
+
+  -webkit-font-smoothing: inherit;
+  -moz-osx-font-smoothing: inherit;
+
+  -webkit-appearance: none;
+
+  &::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+input {
+  border: none;
+  background: none;
+}
+
+li {
+  list-style: none;
+}
