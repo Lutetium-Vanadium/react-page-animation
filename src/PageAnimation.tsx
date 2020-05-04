@@ -1,7 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useHistory } from "react-router-dom";
-
-import useReload from "./useReload";
+import React, { useState, useEffect } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 
 export interface PageAnimationProps {
   children: any;
@@ -13,10 +11,12 @@ export interface PageAnimationProps {
   bias?: "vertical" | "horizontal";
 }
 
+type Location = ReturnType<typeof useLocation>;
+
 interface Page {
   Component: React.FC<{ className: string }>;
   className: string;
-  pathname: string;
+  location: Location;
 }
 
 /**
@@ -65,64 +65,67 @@ function PageAnimation({
   className = null,
   bias = "vertical",
 }: PageAnimationProps) {
+  const [pages, setPages] = useState<Page[]>([]);
+
   const history = useHistory();
-  // As far as I understand, useState essentially creates a new object for each render which has the value copied over.
-  // However for this to work, it requires the same object so as to not completely remount the component
-  // Thats why a ref is used and re-rendering components is handled manually with the custom useReload hook
-  const pages = useRef<Page[]>([
-    {
-      Component: ({ className }) => (
-        <div
-          className={`${className} ${classExtension}`}
-          style={{
-            position: "absolute",
-          }}
-        >
-          {React.Children.map(children, (element) => React.cloneElement(element, { location: history.location }))}
-        </div>
-      ),
-      className: "",
-      pathname: history.location.pathname,
-    },
-  ]);
-  const reload = useReload();
 
   useEffect(() => {
     const unlisten = history.listen((location) => {
-      if (location.pathname === pages.current[pages.current.length - 1].pathname || !animate) return pages.current;
+      setPages((pages) => {
+        if (location.pathname === pages[pages.length - 1].location.pathname || !animate) return pages;
 
-      const dir = getDir(location.pathname, pages.current[pages.current.length - 1].pathname, grid, bias);
+        const dir = getDir(location.pathname, pages[pages.length - 1].location.pathname, grid, bias);
 
-      const NewPage: React.FC<{ className: string }> = ({ className }) => (
-        <div
-          className={`${className} ${classExtension}`}
-          style={{
-            position: "absolute",
-          }}
-        >
-          {React.Children.map(children, (element) => React.cloneElement(element, { location }))}
-        </div>
-      );
+        const NewPage: React.FC<{ className: string }> = ({ className }) => (
+          <div
+            className={`${className} ${classExtension}`}
+            style={{
+              position: "absolute",
+            }}
+          >
+            {React.Children.map(children, (element) => React.cloneElement(element, { location }))}
+          </div>
+        );
 
-      setTimeout(() => {
-        pages.current[1].className = `${classExtension}-done`;
+        setTimeout(() => {
+          setPages((pages) => {
+            pages[1].className = `${classExtension}-done`;
 
-        pages.current.shift();
-        console.log(pages.current);
-        reload();
-      }, timeout);
+            return pages.slice(1);
+          });
+        }, timeout);
 
-      const className = `${classExtension}-${dir}`;
+        const className = `${classExtension}-${dir}`;
 
-      pages.current[pages.current.length - 1].className = className + "-leave";
+        pages[pages.length - 1].className = className + "-leave";
 
-      pages.current.push({
-        Component: NewPage,
-        pathname: location.pathname,
-        className: className + "-enter",
+        return [
+          ...pages,
+          {
+            Component: NewPage,
+            location,
+            className: className + "-enter",
+          },
+        ];
       });
-      reload();
     });
+
+    setPages([
+      {
+        Component: ({ className }) => (
+          <div
+            className={`${className} ${classExtension}`}
+            style={{
+              position: "absolute",
+            }}
+          >
+            {React.Children.map(children, (element) => React.cloneElement(element, { location: history.location }))}
+          </div>
+        ),
+        className: "",
+        location: history.location,
+      },
+    ]);
 
     return unlisten;
   }, [animate]);
@@ -133,8 +136,8 @@ function PageAnimation({
 
   return (
     <div className={className}>
-      {pages.current.map(({ Component, className }, index) => (
-        <Component className={className} key={index} />
+      {pages.map(({ Component, className, location }) => (
+        <Component className={className} key={location.key} />
       ))}
     </div>
   );
