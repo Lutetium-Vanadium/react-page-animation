@@ -11,12 +11,12 @@ export interface PageAnimationProps {
   bias?: "vertical" | "horizontal";
 }
 
-type Location = ReturnType<typeof useLocation>;
-
 interface Page {
   Component: React.FC<{ className: string }>;
   className: string;
-  location: Location;
+  pathname: string;
+  key: string;
+  //location: Location;
 }
 
 /**
@@ -65,16 +65,40 @@ function PageAnimation({
   className = null,
   bias = "vertical",
 }: PageAnimationProps) {
-  const [pages, setPages] = useState<Page[]>([]);
-
   const history = useHistory();
+
+  const [pages, setPages] = useState<Page[]>([
+    {
+      Component: ({ className }) => (
+        <div
+          className={`${className} ${classExtension}`}
+          style={{
+            position: "absolute",
+          }}
+        >
+          {React.Children.map(children, (element) =>
+            React.cloneElement(element, { location: history.location })
+          )}
+        </div>
+      ),
+      className: "",
+      pathname: history.location.pathname,
+      key: "start",
+    },
+  ]);
 
   useEffect(() => {
     const unlisten = history.listen((location) => {
       setPages((pages) => {
-        if (location.pathname === pages[pages.length - 1].location.pathname || !animate) return pages;
+        if (location.pathname === pages[pages.length - 1].pathname || !animate)
+          return pages;
 
-        const dir = getDir(location.pathname, pages[pages.length - 1].location.pathname, grid, bias);
+        const dir = getDir(
+          location.pathname,
+          pages[pages.length - 1].pathname,
+          grid,
+          bias
+        );
 
         const NewPage: React.FC<{ className: string }> = ({ className }) => (
           <div
@@ -83,7 +107,9 @@ function PageAnimation({
               position: "absolute",
             }}
           >
-            {React.Children.map(children, (element) => React.cloneElement(element, { location }))}
+            {React.Children.map(children, (element) =>
+              React.cloneElement(element, { location })
+            )}
           </div>
         );
 
@@ -103,29 +129,13 @@ function PageAnimation({
           ...pages,
           {
             Component: NewPage,
-            location,
             className: className + "-enter",
+            pathname: location.pathname,
+            key: location.key ?? Math.random().toPrecision(6),
           },
         ];
       });
     });
-
-    setPages([
-      {
-        Component: ({ className }) => (
-          <div
-            className={`${className} ${classExtension}`}
-            style={{
-              position: "absolute",
-            }}
-          >
-            {React.Children.map(children, (element) => React.cloneElement(element, { location: history.location }))}
-          </div>
-        ),
-        className: "",
-        location: history.location,
-      },
-    ]);
 
     return unlisten;
   }, [animate]);
@@ -136,16 +146,22 @@ function PageAnimation({
 
   return (
     <div className={className}>
-      {pages.map(({ Component, className, location }) => (
-        <Component className={className} key={location.key} />
-      ))}
+      {pages.map(({ Component, className, key }) => {
+        console.log(key);
+        return <Component className={className} key={key} />;
+      })}
     </div>
   );
 }
 
 export default PageAnimation;
 
-const getDir = (pathname: string, prevpath: string, grid: RegExp[][], bias: "vertical" | "horizontal") => {
+const getDir = (
+  pathname: string,
+  prevpath: string,
+  grid: RegExp[][],
+  bias: "vertical" | "horizontal"
+) => {
   let pathnameIndex: number[];
   let prevpathIndex: number[];
 
@@ -176,8 +192,10 @@ const getDir = (pathname: string, prevpath: string, grid: RegExp[][], bias: "ver
     if (pathnameIndex[1] > prevpathIndex[1]) return "bottom";
   }
 
-  if (pathname.split("/").length > prevpath.split("/").length) return "same-forward";
-  if (pathname.split("/").length < prevpath.split("/").length) return "same-backward";
+  if (pathname.split("/").length > prevpath.split("/").length)
+    return "same-forward";
+  if (pathname.split("/").length < prevpath.split("/").length)
+    return "same-backward";
 
   return "same";
 };
