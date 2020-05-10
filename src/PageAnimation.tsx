@@ -147,7 +147,6 @@ function PageAnimation({
   return (
     <div className={className}>
       {pages.map(({ Component, className, key }) => {
-        console.log(key);
         return <Component className={className} key={key} />;
       })}
     </div>
