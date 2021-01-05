@@ -11,7 +11,7 @@
   "types": "./lib/react-page-animation.d.ts",
   "dependencies": {
     "@babel/polyfill": "^7.8.3",
-    "axios": "^0.19.1",
+    "axios": "^0.21.1",
     "react": "16.13.1",
     "react-dom": "^16.12.0",
     "react-router-dom": "^5.1.2"
